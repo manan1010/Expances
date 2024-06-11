@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Daily Expenses</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: url('/euro-1353420_1280.jpg') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+    
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 500px;
+      background-color: rgba(232, 198, 76, 0.4); /* White with 80% opacity */
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: #fff;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0069d9;
+    }
+
+    .expenses {
+      margin-top: 30px;
+    }
+
+    .expenses h2 {
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .expense-item {
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .expense-item p {
+      margin: 0;
+    }
+
+    .expense-item button {
+      background-color: #dc3545;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+
+    .expense-item button:hover {
+      background-color: #c82333;
+    }
+
+    .total-amount {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>My Daily Expenses</h1>
+
+  <div class="form-group">
+    <label for="expenseName">Expense Name:</label>
+    <input type="text" id="expenseName" placeholder="Enter expense name">
+  </div>
+  <div class="form-group">
+    <label for="expenseWhere">Where:</label>
+    <input type="text" id="expenseWhere" placeholder="Enter where the expense occurred">
+  </div>
+  <div class="form-group">
+    <label for="expenseAmount">Expense Amount:</label>
+    <input type="number" id="expenseAmount" placeholder="Enter expense amount">
+  </div>
+
+  <button id="addExpense">Add Expense</button>
+
+  <div class="expenses">
+    <h2>Expenses</h2>
+    <div id="expensesList"></div>
+    <p class="total-amount">Total Amount: <span id="totalAmount">0.00</span></p>
+  </div>
+</div>
+
+<script>
+  let expenses = [];
+  const expensesList = document.getElementById('expensesList');
+  const totalAmountElement = document.getElementById('totalAmount');
+  const addExpenseButton = document.getElementById('addExpense');
+
+  addExpenseButton.addEventListener('click', () => {
+    const expenseName = document.getElementById('expenseName').value;
+    const expenseAmount = parseFloat(document.getElementById('expenseAmount').value);
+
+    if (expenseName && !isNaN(expenseAmount)) {
+      expenses.push({ name: expenseName, amount: expenseAmount });
+      updateExpensesList();
+      updateTotalAmount();
+      document.getElementById('expenseName').value = '';
+      document.getElementById('expenseAmount').value = '';
+    } else {
+      alert('Please enter a valid expense name and amount.');
+    }
+  });
+
+  function updateExpensesList() {
+    expensesList.innerHTML = '';
+    expenses.forEach((expense, index) => {
+      const expenseItem = document.createElement('div');
+      expenseItem.classList.add('expense-item');
+      expenseItem.innerHTML = `
+        <p><strong>${expense.name}:</strong> ${expense.amount.toFixed(2)}</p>
+        <button onclick="deleteExpense(${index})">Delete</button>
+      `;
+      expensesList.appendChild(expenseItem);
+    });
+  }
+
+  function deleteExpense(index) {
+    expenses.splice(index, 1);
+    updateExpensesList();
+    updateTotalAmount();
+  }
+
+  function updateTotalAmount() {
+    const totalAmount = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+    totalAmountElement.textContent = totalAmount.toFixed(2);
+  }
+</script>
+
+</body>
+</html>
